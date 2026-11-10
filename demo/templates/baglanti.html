@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<section aria-labelledby="sayfa-baslik">
+  <h1 id="sayfa-baslik">Bağlantı kontrolü</h1>
+  <p class="giris-metni">API anahtarınızın ve imzanızın test ortamında çalıştığını, yalnızca okuma yapan çağrılarla doğrular. Para hareketi olmaz.</p>
+
+  <div class="eylemler">
+    <button type="button" class="dugme dugme--birincil" data-kontrol-baslat>Kontrolleri çalıştır</button>
+  </div>
+
+  <table class="tablo kontrol-tablo" data-kontroller data-toplam="{{ total_checks }}">
+    <thead>
+      <tr>
+        <th scope="col" class="kontrol-ad">Kontrol</th>
+        <th scope="col" class="kontrol-metot">SDK metodu</th>
+        <th scope="col">V2 imza</th>
+        <th scope="col">V1 imza</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for check in checks %}
+      <tr data-kontrol="{{ check.id }}">
+        <th scope="row">{{ check.label }}</th>
+        <td><code class="kod">{% for part in check.method.split(".") %}{{ part }}{% if not loop.last %}.<wbr>{% endif %}{% endfor %}</code></td>
+        <td class="kontrol-sonuc" data-surum="V2"><span class="kontrol-etiket">V2 imza: </span><span class="sonuc-bekliyor">Bekliyor</span></td>
+        {% if check.v1 %}
+        <td class="kontrol-sonuc" data-surum="V1"><span class="kontrol-etiket">V1 imza: </span><span class="sonuc-bekliyor">Bekliyor</span></td>
+        {% else %}
+        <td class="kontrol-sonuc"><span class="kontrol-etiket">V1 imza: </span><span class="sonuc-bekliyor" title="Bu uç yalnızca V2 imzayla çalışır; V1 denenmez.">Yalnızca V2</span></td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p class="kontrol-ozet" aria-live="polite" data-kontrol-ozet>
+    <span class="yalniz-genis">Kontrolleri çalıştırınca her çağrı sağdaki SDK kaydında da görünür.</span><span class="yalniz-dar">Kontrolleri çalıştırınca her çağrı aşağıdaki SDK kaydında da görünür.</span>
+  </p>
+</section>
+{% endblock %}
+{% block scripts %}<script src="/static/js/baglanti.js" defer></script>{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="metin-sayfa sonuc" aria-labelledby="sayfa-baslik">
+  <div class="sonuc-ust">
+    <h1 id="sayfa-baslik" tabindex="-1" data-odak>
+      {%- if state == 'success' %}Ödeme alındı{% elif state == 'pending' %}Ödeme onayı bekleniyor{% else %}Ödeme alınamadı{% endif -%}
+    </h1>
+    <span class="durum durum--{{ status.tone }}">{{ status.label }}</span>
+  </div>
+
+  {% if state == 'success' %}
+  <p class="giris-metni">{{ product_name }} siparişiniz onaylandı.</p>
+  <p class="sonuc-tutar">{{ total_text }}</p>
+  <dl class="bilgi">
+    <div><dt>Taksit</dt><dd>{{ summary }}</dd></div>
+    {% if payment_id is not none %}<div><dt>Ödeme no</dt><dd>{{ payment_id }}</dd></div>{% endif %}
+    {% if order_id %}<div><dt>Sipariş no</dt><dd>{{ order_id }}</dd></div>{% endif %}
+    <div><dt>Durum</dt><dd>{{ status.label }}</dd></div>
+  </dl>
+  <div class="eylemler">
+    <a class="dugme dugme--birincil" href="/siparisler">Siparişleri görüntüle</a>
+    <a class="dugme dugme--ikincil" href="/">Yeni ödeme yap</a>
+  </div>
+
+  {% elif state == 'pending' %}
+  <p class="giris-metni">Banka ödemeyi henüz sonuçlandırmadı. Kartınızdan çekim yapılıp yapılmadığı netleşince bu sayfa sonucu gösterir.</p>
+  {% if pending_note %}
+  <p class="banka-not">{{ pending_note }}</p>
+  {% endif %}
+  <p class="sonuc-tutar">{{ total_text }}</p>
+  <dl class="bilgi">
+    <div><dt>Taksit</dt><dd>{{ summary }}</dd></div>
+    {% if payment_id is not none %}<div><dt>Ödeme no</dt><dd>{{ payment_id }}</dd></div>{% endif %}
+    {% if order_id %}<div><dt>Sipariş no</dt><dd>{{ order_id }}</dd></div>{% endif %}
+    <div><dt>Durum</dt><dd>{{ status.label }}</dd></div>
+  </dl>
+  <form class="eylemler" method="post" action="/odeme/sonuc/sorgula" data-sorgu-formu>
+    <input type="hidden" name="siparis" value="{{ order_id }}">
+    <button type="submit" class="dugme dugme--birincil" data-sorgu-dugme>Durumu sorgula</button>
+    <a class="dugme dugme--ikincil" href="/siparisler">Siparişleri görüntüle</a>
+  </form>
+  <p class="yardim">Birkaç saniye bekleyip durumu sorgulayın. Sorgu, sunucudan MagicPay'e yeni bir 3D tamamlama çağrısı yapar.</p>
+
+  {% else %}
+  <p class="giris-metni">Kartınızdan para çekilmedi.</p>
+  <div class="banka-yanit">
+    <p class="banka-yanit-baslik">Bankanın yanıtı</p>
+    {% if connection %}
+    <p class="banka-yanit-metin">MagicPay'e ulaşılamadı.</p>
+    {% elif message %}
+    <p class="banka-yanit-metin">"{{ message }}"</p>
+    {% else %}
+    <p class="banka-yanit-metin">Banka bir açıklama göndermedi.</p>
+    {% endif %}
+    {% if code %}<p class="banka-yanit-kod">Hata kodu {{ code }}</p>{% endif %}
+  </div>
+  <p>{{ advice }}</p>
+  <dl class="bilgi bilgi--satir">
+    <div><dt>Tutar</dt><dd>{{ total_text }}</dd></div>
+    {% if payment_id is not none %}<div><dt>Ödeme no</dt><dd>{{ payment_id }}</dd></div>{% endif %}
+    {% if order_id %}<div><dt>Sipariş no</dt><dd>{{ order_id }}</dd></div>{% endif %}
+  </dl>
+  <div class="eylemler">
+    <a class="dugme dugme--birincil" href="/?{{ retry_qs }}">Ödemeyi tekrar dene</a>
+    <a class="dugme dugme--ikincil" href="/siparisler">Siparişleri görüntüle</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
+{% block scripts %}<script src="/static/js/sonuc.js" defer></script>{% endblock %}

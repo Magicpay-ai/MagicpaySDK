@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<section aria-labelledby="sayfa-baslik">
+  <h1 id="sayfa-baslik">Siparişler</h1>
+  <p class="giris-metni">Bu oturumda yapılan ödemeler. Durumu MagicPay'den sorgulayabilir ya da ödemeyi iade edebilirsiniz.</p>
+
+  {% if rows %}
+  <table class="tablo siparis-tablo" data-siparisler>
+    <thead>
+      <tr>
+        <th scope="col">Zaman</th>
+        <th scope="col">Ödeme no / Sipariş no</th>
+        <th scope="col" class="sayi">Tutar</th>
+        <th scope="col">Durum</th>
+        <th scope="col">İşlemler</th>
+      </tr>
+    </thead>
+    {% for row in rows %}
+    <tbody class="siparis" data-siparis="{{ row.id }}">
+      <tr>
+        <td class="sayi-sol" data-baslik="Zaman">{{ row.time }}</td>
+        <td data-baslik="Ödeme no / Sipariş no">
+          <span class="odeme-no">{{ row.paymentId }}</span>
+          <span class="siparis-no">{{ row.id }}</span>
+        </td>
+        <td class="sayi" data-baslik="Tutar">{{ row.totalText }}</td>
+        <td data-baslik="Durum">
+          <span class="durum durum--{{ row.status.tone }}" data-durum>{{ row.status.label }}</span>
+        </td>
+        <td data-baslik="İşlemler">
+          <div class="islemler">
+            <button type="button" class="dugme dugme--ikincil dugme--kucuk" data-sorgula>Durumu sorgula</button>
+            {% if row.refundable %}
+            <button type="button" class="dugme dugme--ikincil dugme--kucuk" data-iade aria-expanded="false"
+                    aria-controls="iade-{{ row.id }}">İade et</button>
+            {% endif %}
+          </div>
+          <p class="satir-not" data-not {% if not row.note %}hidden{% endif %}>{{ row.note or '' }}</p>
+          <p class="satir-not" data-iade-not {% if not row.refundNote %}hidden{% endif %}>{{ row.refundNote or '' }}</p>
+          <p class="satir-not satir-not--hata" data-hata hidden></p>
+        </td>
+      </tr>
+      {% if row.refundable %}
+      <tr class="iade-onay" id="iade-{{ row.id }}" hidden data-iade-onay>
+        <td colspan="5">
+          <p>{{ row.totalText }}'nin tamamı karta iade edilecek. Bu işlem geri alınamaz.</p>
+          <div class="islemler">
+            <button type="button" class="dugme dugme--tehlike" data-iade-onayla>İadeyi onayla</button>
+            <button type="button" class="dugme dugme--ikincil" data-iade-vazgec>Vazgeç</button>
+          </div>
+          <p class="alan-hata" data-iade-hata hidden></p>
+        </td>
+      </tr>
+      {% endif %}
+    </tbody>
+    {% endfor %}
+  </table>
+  {% else %}
+  <div class="bos">
+    <p>Bu oturumda henüz ödeme yok. İlk ödemeyi mağaza sayfasından yapın.</p>
+    <a class="dugme dugme--birincil" href="/">Mağazaya git</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
+{% block scripts %}<script src="/static/js/siparisler.js" defer></script>{% endblock %}

@@ -1,0 +1,78 @@
+/* Design tokens: copied verbatim from DESIGN.md section 2.2. Other CSS uses only these variables. */
+:root {
+  /* ---- Temel palet (6) ---- */
+  --color-murekkep: #1C2B45;  /* Mürekkep: gövde metni, başlıklar, birincil buton zemini, yazıcı ağzı. Beyazda 14:1 */
+  --color-kagit:    #FFFFFF;  /* Kâğıt: mağaza yüzeyi, form alanı zemini */
+  --color-rulo:     #EEF2F5;  /* Rulo: SDK kaydı panelinin termal kâğıt zemini */
+  --color-kenar:    #7A8594;  /* Kenar: input, radio ve ikincil buton kenarı. Beyazda 3.7:1 (WCAG 1.4.11) */
+  --color-onay:     #1D6B3A;  /* Onay: başarılı durum metni. Beyazda 6.5:1 */
+  --color-ret:      #B42318;  /* Ret: hata metni, hata kenarı, iade onay butonu zemini. Beyazda 6.5:1 */
+
+  /* ---- İşlevsel ek renkler (paletin parçası değil, yalnızca belirtilen rol için) ---- */
+  --color-murekkep-2:  #2E4066; /* birincil buton hover, yazıcı ağzının alt dudağı */
+  --color-soluk:       #4F5B6B; /* ikincil metin. Beyazda 7:1, rulo üstünde 6.3:1 */
+  --color-cizgi:       #C9D1DA; /* tablo satır çizgileri, iki sütun arasındaki dikiş. Bilgi taşımayan ayraç */
+  --color-yirtma:      #9AA5B1; /* rulodaki kesik yırtma çizgisi */
+  --color-agiz-metin:  #C9D2DE; /* yazıcı ağzındaki ikincil metin. Mürekkep üstünde 9:1 */
+  --color-secim:       #E4EBF5; /* seçili taksit satırı zemini */
+  --color-odak:        #2B63D9; /* klavye odak halkası. Beyazda 5.4:1, rulo üstünde 4.8:1 */
+  --color-fosfor:      #FFF0B3; /* yeni gelen kayıt satırının geçici işareti */
+  --color-onay-zemin:  #E6F2E9; /* "Başarılı" etiketinin zemini */
+  --color-ret-zemin:   #FBEAE8; /* hata satırı ve "Başarısız" etiketi zemini. Ret metni üstünde 5.6:1 */
+  --color-bekleme:     #7A4D00; /* bekleyen durum metni, test ortamı etiketi metni. Beyazda 7.3:1 */
+  --color-bekleme-zemin: #FCF1D0; /* test ortamı etiketi ve "3D bekleniyor" etiketinin zemini */
+
+  /* ---- Fontlar ---- */
+  --font-arayuz: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
+  --font-kod:    "Atkinson Hyperlegible Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  /* Mono YALNIZCA şuralarda: SDK metot adı, HTTP metodu + path, JSON blokları.
+     Tutar, süre, HTTP durumu, saat, ödeme no ve sipariş no arayüz fontuyla ve tabular rakamla yazılır. */
+  --num: tabular-nums;          /* font-variant-numeric: var(--num); tüm tutar, no, süre, saat */
+
+  /* ---- Tip ölçeği (rem, kök 16px; >=1800px'te kök %106.25) ---- */
+  --fs-1: 0.875rem;   /* 14px: tablo başlığı, açıklama, rulo ikincil satırı, JSON. Kayıttaki en küçük boyut */
+  --fs-2: 0.9375rem;  /* 15px: form etiketi, rulodaki path satırı, durum etiketi */
+  --fs-3: 1.0625rem;  /* 17px: gövde, input içeriği, buton, rulodaki SDK metot adı */
+  --fs-4: 1.3125rem;  /* 21px: bölüm başlığı (h2) */
+  --fs-5: 1.75rem;    /* 28px: sayfa başlığı (h1), ödenecek tutar */
+  --fs-6: 2.5rem;     /* 40px: ürün fiyatı ve sonuç sayfasındaki tutar */
+  --lh-siki: 1.2;     /* fs-5, fs-6 */
+  --lh-orta: 1.35;    /* fs-4, butonlar, rulo özet satırları */
+  --lh-govde: 1.5;    /* gövde ve JSON */
+  --fw-normal: 400;
+  --fw-vurgu: 600;    /* etiket, SDK metot adı, seçili satır, buton */
+  --fw-guclu: 700;    /* yalnızca h1, fiyat, hata satırındaki HTTP durumu */
+
+  /* ---- Boşluk (4'lük) ---- */
+  --space-1: 4px;   --space-2: 8px;   --space-3: 12px;  --space-4: 16px;
+  --space-5: 24px;  --space-6: 32px;  --space-7: 48px;  --space-8: 64px;
+
+  /* ---- Köşe (hiyerarşiye göre, hepsi aynı değil) ---- */
+  --radius-kontrol: 6px; /* input, buton, taksit tablosunun dış çerçevesi */
+  --radius-etiket: 3px;  /* durum etiketi, test ortamı etiketi */
+  --radius-yok: 0;       /* rulo, kayıt satırı, JSON bloğu, sipariş tablosu, demo ayarı kutusu */
+
+  /* ---- Kenarlar ---- */
+  --border-kontrol: 1px solid var(--color-kenar);
+  --border-cizgi:   1px solid var(--color-cizgi);
+  --border-yirtma:  1px dashed var(--color-yirtma);
+  --border-demo:    1px dashed var(--color-kenar);    /* "bu mağazanın parçası değil, sunucunun ayarı" */
+  --border-agiz:    3px solid var(--color-murekkep-2); /* yazıcı ağzının alt dudağı */
+  --odak-halkasi:   2px solid var(--color-odak);      /* outline; offset 2px */
+
+  /* ---- Yerleşim ---- */
+  --header-h: 64px;
+  --log-w: 400px;          /* 900-1279px */
+  --icerik-max: 800px;
+  --kontrol-h: 48px;       /* input ve birincil buton */
+  --kontrol-h-kucuk: 36px; /* tablo içi butonlar */
+
+  /* ---- Hareket ---- */
+  --sure-tepki: 120ms;     /* hover, chevron dönüşü */
+  --sure-besleme: 240ms;   /* yeni kayıt satırının yazıcıdan çıkışı */
+  --sure-fosfor: 1800ms;   /* fosfor işaretinin toplam süresi (600ms sabit + 1200ms sönme) */
+  --egri-besleme: cubic-bezier(.2, .7, .3, 1);
+}
+
+@media (min-width: 1280px) { :root { --log-w: 560px; } }
+@media (min-width: 1800px) { :root { --log-w: 760px; --icerik-max: 880px; font-size: 106.25%; } }

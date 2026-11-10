@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="metin-sayfa" aria-labelledby="sayfa-baslik">
+  <h1 id="sayfa-baslik">Banka doğrulaması</h1>
+  <p class="giris-metni">Ödemeyi onaylamak için bankanızın 3D Secure sayfasına geçiyorsunuz. Orada telefonunuza gelen kodu gireceksiniz.</p>
+
+  <dl class="bilgi">
+    <div><dt>Tutar</dt><dd>{{ total_text }}</dd></div>
+    <div><dt>Taksit</dt><dd>{{ order.summary }}</dd></div>
+    <div><dt>Kart</dt><dd>{{ order.card_masked }}{% if order.bank %} ({{ order.bank }}){% endif %}</dd></div>
+  </dl>
+
+  <div class="eylemler">
+    <a class="dugme dugme--birincil" href="/odeme/banka/{{ order.id }}">Banka sayfasına geç</a>
+    <a class="metin-baglanti" href="/?{{ back_qs }}">Ödemeden vazgeç</a>
+  </div>
+  <p class="yardim">Banka sayfası bankanın kendi tasarımıdır; bu mağazaya ait değil.</p>
+</section>
+{% endblock %}

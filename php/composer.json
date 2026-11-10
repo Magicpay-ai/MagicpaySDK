@@ -1,0 +1,23 @@
+{
+    "name": "magicpay/magicpay-php",
+    "description": "Official PHP SDK for the MagicPay payment API",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["magicpay", "payment", "payments", "3ds", "wallet"],
+    "homepage": "https://magicpay.ai",
+    "authors": [{ "name": "MagicPay", "email": "ai@magicpay.ai" }],
+    "require": {
+        "php": ">=8.0",
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": { "MagicPay\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "MagicPay\\Tests\\": "tests/" }
+    },
+    "scripts": {
+        "test": "php tests/run.php"
+    }
+}

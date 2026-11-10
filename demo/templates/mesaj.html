@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="metin-sayfa" aria-labelledby="sayfa-baslik">
+  <h1 id="sayfa-baslik">{{ title }}</h1>
+  <p class="giris-metni">{{ text }}</p>
+  <div class="eylemler">
+    <a class="dugme dugme--birincil" href="/">Mağazaya git</a>
+    <a class="dugme dugme--ikincil" href="/siparisler">Siparişleri görüntüle</a>
+  </div>
+</section>
+{% endblock %}

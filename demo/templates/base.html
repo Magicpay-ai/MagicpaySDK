@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page_title or merchant_name }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Atkinson+Hyperlegible+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="/static/css/tokens.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body>
+  <a class="atla" href="#sdk-cagrilari">SDK çağrılarına atla</a>
+
+  <header class="ust">
+    <div class="ust-sol">
+      <a class="marka" href="/">{{ merchant_name }}</a>
+      <nav class="nav" aria-label="Ana menü">
+        <a href="/" {% if active == 'magaza' %}aria-current="page"{% endif %}>Mağaza</a>
+        <a href="/siparisler" {% if active == 'siparisler' %}aria-current="page"{% endif %}>Siparişler</a>
+        <a href="/baglanti" {% if active == 'baglanti' %}aria-current="page"{% endif %}>Bağlantı kontrolü</a>
+      </nav>
+    </div>
+    <div class="ust-sag">
+      <span class="ortam{% if not is_sandbox %} ortam--canli{% endif %}" title="{{ 'Test ortamı' if is_sandbox else 'Canlı ortam' }} ({{ env_host }})">
+        {%- if is_sandbox %}Test ortamı{% else %}Canlı ortam{% endif %}<span class="ortam-host"> ({{ env_host }})</span>
+      </span>
+    </div>
+  </header>
+
+  <div class="sayfa">
+    <main class="ana" id="icerik">
+      {% if config_error %}
+      <p class="ayar-uyari">{{ config_error }}</p>
+      {% endif %}
+      <div class="icerik">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+
+    <aside class="rulo" id="sdk-cagrilari" aria-labelledby="rulo-baslik" data-rulo>
+      <div class="agiz">
+        <button type="button" class="agiz-ac" aria-expanded="false" aria-controls="rulo-govde" data-rulo-ac>
+          <span class="agiz-ac-satir">
+            <span class="agiz-ac-baslik">SDK çağrıları (<span data-rulo-sayi>{{ log_state.count }}</span>)</span>
+            <span data-rulo-ac-metin>Göster</span>
+          </span>
+          <span class="agiz-son" data-rulo-son></span>
+        </button>
+        <div class="agiz-icerik">
+          <div class="agiz-ust">
+            <h2 class="agiz-baslik" id="rulo-baslik" tabindex="-1">SDK çağrıları</h2>
+            <span class="agiz-sayac" data-rulo-sayac>{{ log_state.count }} çağrı</span>
+            <button type="button" class="dugme-ters" data-rulo-temizle>Günlüğü temizle</button>
+          </div>
+          <p class="agiz-aciklama">Sunucunuzdaki magicpay SDK'sının MagicPay'e yaptığı istekler. En yenisi üstte.</p>
+        </div>
+      </div>
+      <div class="rulo-govde" id="rulo-govde" data-rulo-govde>
+        <button type="button" class="rulo-yeni" hidden data-rulo-yeni></button>
+        <p class="rulo-bos" data-rulo-bos hidden></p>
+        <ol class="rulo-liste" data-rulo-liste></ol>
+      </div>
+      <div class="gorunmez" aria-live="polite" data-rulo-duyuru></div>
+    </aside>
+  </div>
+
+  <script type="application/json" id="sdk-log-data">{{ log_state|tojson }}</script>
+  <script src="/static/js/log.js" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

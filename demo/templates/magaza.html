@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="urun" aria-labelledby="urun-baslik">
+  <div class="urun-ust">
+    <h1 id="urun-baslik">{{ product_name }}</h1>
+    <p class="urun-fiyat" data-fiyat>{{ amount_text }}</p>
+  </div>
+  <p class="urun-aciklama">{{ product_text }}</p>
+</section>
+
+<div class="demo-ayar" data-demo-ayar data-min="{{ min_amount }}" data-max="{{ max_amount }}" data-hata="{{ amount_error }}">
+  <div class="demo-ayar-satir">
+    <label for="demo-tutar">Demo ayarı: ödeme tutarı</label>
+    <span class="demo-ayar-giris">
+      <input id="demo-tutar" class="giris giris--tutar" type="text" inputmode="decimal" autocomplete="off"
+             value="{{ amount_input }}" aria-describedby="demo-tutar-yardim demo-tutar-hata">
+      <span>TL</span>
+    </span>
+    <button type="button" class="dugme dugme--ikincil dugme--kucuk" data-tutar-uygula>Tutarı uygula</button>
+  </div>
+  <p class="yardim" id="demo-tutar-yardim">Taksit tablosu yeni tutara göre yeniden hesaplanır.</p>
+  <p class="alan-hata" id="demo-tutar-hata" data-tutar-hata hidden></p>
+</div>
+
+<form class="odeme" method="post" action="/odeme" novalidate data-odeme-formu>
+  <input type="hidden" name="tutar" value="{{ amount_input }}" data-form-tutar>
+  <input type="hidden" name="banka" value="" data-form-banka>
+  <input type="hidden" name="form_nonce" value="{{ form_nonce }}">
+
+  {% if form_error %}
+  <p class="form-hata" role="alert">{{ form_error }}</p>
+  {% endif %}
+
+  <div class="odeme-sutunlar">
+    <fieldset class="kart">
+      <legend><h2>Kart bilgileri</h2></legend>
+      <p class="yardim">Kart alanları EsnekPOS test kartıyla dolduruldu. Gerçek kart bilgisi girmeyin.</p>
+
+      <div class="alan">
+        <label for="kart-no">Kart numarası</label>
+        <input id="kart-no" name="card_number" class="giris" type="text" inputmode="numeric" autocomplete="cc-number"
+               maxlength="19" value="{{ card_number }}" data-kart-no
+               aria-describedby="kart-no-bin{% if errors.number %} kart-no-hata{% endif %}"
+               {% if errors.number %}aria-invalid="true"{% endif %}>
+        <p class="bin" id="kart-no-bin" aria-live="polite" data-bin>Kartın bankası ilk 6 haneden bulunur.</p>
+        <p class="alan-hata" id="kart-no-hata" {% if not errors.number %}hidden{% endif %}>{{ errors.number }}</p>
+      </div>
+
+      <div class="alan">
+        <label for="kart-isim">Kart üzerindeki isim</label>
+        <input id="kart-isim" name="card_name" class="giris" type="text" autocomplete="cc-name" maxlength="60"
+               value="{{ card_name }}" {% if errors.name %}aria-invalid="true" aria-describedby="kart-isim-hata"{% endif %}>
+        <p class="alan-hata" id="kart-isim-hata" {% if not errors.name %}hidden{% endif %}>{{ errors.name }}</p>
+      </div>
+
+      <div class="alan-cift">
+        <div class="alan">
+          <label for="kart-skt">Son kullanma tarihi</label>
+          <input id="kart-skt" name="card_exp" class="giris giris--skt" type="text" inputmode="numeric" autocomplete="cc-exp"
+                 placeholder="AA/YY" maxlength="7" value="{{ card_exp }}"
+                 {% if errors.exp %}aria-invalid="true" aria-describedby="kart-skt-hata"{% endif %}>
+          <p class="alan-hata" id="kart-skt-hata" {% if not errors.exp %}hidden{% endif %}>{{ errors.exp }}</p>
+        </div>
+        <div class="alan">
+          <label for="kart-cvc">Güvenlik kodu</label>
+          <input id="kart-cvc" name="card_cvc" class="giris giris--cvc" type="text" inputmode="numeric" autocomplete="cc-csc"
+                 maxlength="3" value="{{ card_cvc }}"
+                 {% if errors.cvc %}aria-invalid="true" aria-describedby="kart-cvc-hata"{% endif %}>
+          <p class="alan-hata" id="kart-cvc-hata" {% if not errors.cvc %}hidden{% endif %}>{{ errors.cvc }}</p>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="taksit" data-taksit data-secili="{{ installment }}" data-tutar="{{ amount }}">
+      <legend><h2>Taksit seçimi</h2></legend>
+      <p class="alan-hata" data-taksit-hata hidden>Taksit seçenekleri alınamadı. Tek çekim ödeyebilir ya da tutarı yeniden uygulayarak tekrar deneyebilirsiniz.</p>
+      <table class="taksit-tablo">
+        <thead>
+          <tr><th scope="col">Taksit</th><th scope="col" class="sayi">Aylık</th><th scope="col" class="sayi">Toplam</th></tr>
+        </thead>
+        <tbody data-taksit-govde>
+          <tr class="taksit-bilgi"><td colspan="3">Taksit seçenekleri getiriliyor…</td></tr>
+        </tbody>
+      </table>
+      <p class="yardim" data-taksit-tek hidden>Bu tutar için taksit seçeneği yok; ödeme tek çekim alınır.</p>
+      <p class="yardim">Fiyatlar, mağazanın POS'ları arasındaki en düşük müşteri fiyatıdır.</p>
+    </fieldset>
+  </div>
+
+  <div class="odeme-cubuk">
+    <div class="odeme-toplam">
+      <p class="odeme-toplam-etiket">Ödenecek tutar</p>
+      <p class="odeme-toplam-tutar" data-toplam>{{ default_option.totalText }}</p>
+      <p class="odeme-toplam-ozet" data-ozet>{{ default_option.summary }}</p>
+    </div>
+    <div class="odeme-eylem">
+      <button type="submit" class="dugme dugme--birincil dugme--genis" data-ode>{{ default_option.payText }}</button>
+      <p class="yardim">Ödemeyi bankanızın 3D Secure sayfasında onaylayacaksınız.</p>
+    </div>
+  </div>
+</form>
+
+<script type="application/json" id="taksit-varsayilan">{{ default_option|tojson }}</script>
+{% endblock %}
+{% block scripts %}<script src="/static/js/magaza.js" defer></script>{% endblock %}

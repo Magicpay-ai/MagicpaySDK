@@ -34,7 +34,8 @@
   <div class="odeme-sutunlar">
     <fieldset class="kart">
       <legend><h2>Kart bilgileri</h2></legend>
-      <p class="yardim">Kart alanları EsnekPOS test kartıyla dolduruldu. Gerçek kart bilgisi girmeyin.</p>
+      {% if is_sandbox %}<p class="yardim">Kart alanları EsnekPOS test kartıyla dolduruldu. Gerçek kart bilgisi girmeyin.</p>
+      {% else %}<p class="yardim">Canlı ortam: gerçek kartınızdan gerçek tutar çekilir. Küçük bir tutarla deneyin ve aynı gün iade edin.</p>{% endif %}
 
       <div class="alan">
         <label for="kart-no">Kart numarası</label>

@@ -66,7 +66,6 @@ if not _is_loopback_host(_public_host):
 
 MIN_AMOUNT = Decimal("1.00")
 MAX_AMOUNT = Decimal("50000.00")
-DEFAULT_AMOUNT = Decimal("1250.00")
 CALLBACK_URL = "https://example.com/callback"  # the server cannot reach localhost; we confirm server-side
 
 PRODUCT_NAME = "Bakır cezve, 2 fincanlık"
@@ -101,6 +100,14 @@ else:
 
 ENV_HOST = urlsplit(BASE_URL).hostname or BASE_URL
 IS_SANDBOX = BASE_URL.rstrip("/") == SANDBOX_URL
+# Live environment: real cards move real money, so start from a small amount and an empty card form.
+_SAFE_AMOUNT = Decimal("1250.00" if IS_SANDBOX else "1.00")
+try:
+    DEFAULT_AMOUNT = Decimal(os.environ.get("DEMO_AMOUNT") or _SAFE_AMOUNT)
+    if not (MIN_AMOUNT <= DEFAULT_AMOUNT <= MAX_AMOUNT):  # also rejects NaN
+        DEFAULT_AMOUNT = _SAFE_AMOUNT
+except Exception:  # noqa: BLE001 - bad DEMO_AMOUNT falls back to the safe default
+    DEFAULT_AMOUNT = _SAFE_AMOUNT
 GENERIC_ERROR = ("İşlem tamamlanamadı. SDK kaydında son satırı açıp hatayı inceleyin, "
                  "ardından tekrar deneyin.")
 
@@ -359,8 +366,12 @@ def new_form_nonce() -> str:
 def store_page(request: Request, amount: Decimal, installment: int = 1, values: Optional[Dict[str, str]] = None,
                errors: Optional[Dict[str, str]] = None, form_error: Optional[str] = None,
                status_code: int = 200) -> HTMLResponse:
-    card = values or {"number": TEST_CARD["number"], "name": TEST_CARD["name"],
-                      "exp": TEST_CARD["exp"], "cvc": TEST_CARD["cvc"]}
+    if values:
+        card = values
+    elif IS_SANDBOX:
+        card = {"number": TEST_CARD["number"], "name": TEST_CARD["name"], "exp": TEST_CARD["exp"], "cvc": TEST_CARD["cvc"]}
+    else:
+        card = {"number": "", "name": "", "exp": "", "cvc": ""}
     digits = re.sub(r"\D", "", card.get("number", ""))
     card_display = " ".join(digits[i:i + 4] for i in range(0, len(digits), 4))
     return render(request, "magaza.html", "magaza", status_code=status_code,

@@ -5,6 +5,11 @@
     "license": "MIT",
     "keywords": ["magicpay", "payment", "payments", "3ds", "wallet"],
     "homepage": "https://magicpay.ai",
+    "support": {
+        "issues": "https://github.com/Magicpay-ai/MagicpaySDK/issues",
+        "source": "https://github.com/Magicpay-ai/magicpay-php",
+        "docs": "https://magicpay.gitbook.io/magicpay-documentation"
+    },
     "authors": [{ "name": "MagicPay", "email": "ai@magicpay.ai" }],
     "require": {
         "php": ">=8.0",

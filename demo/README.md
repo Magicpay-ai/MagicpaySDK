@@ -17,8 +17,9 @@ python -m venv .venv
 
 | Değişken | Zorunlu | Varsayılan |
 |---|---|---|
-| `MAGICPAY_API_KEY` | evet (test anahtarı) | |
-| `MAGICPAY_SECRET_KEY` | evet (test anahtarı) | |
+| `MAGICPAY_API_KEY` | evet (ortamın anahtarı) | |
+| `MAGICPAY_SECRET_KEY` | evet (ortamın anahtarı) | |
+| `DEMO_AMOUNT` | hayır | test ortamında `1250.00`, canlıda `1.00` |
 | `MAGICPAY_BASE_URL` | hayır | `https://trdev.magicpay.ai` (SDK'nın `SANDBOX_URL`'i) |
 | `MAGICPAY_MERCHANT_NAME` | hayır | `Demo Mağaza` (header'daki mağaza adı) |
 | `DEMO_PUBLIC_URL` | hayır | `http://127.0.0.1:8000` (bankanın dönüş adresi bundan kurulur) |
@@ -41,6 +42,17 @@ Remove-Variable k, s
 ```
 
 Tarayıcıda `http://127.0.0.1:8000` adresini açın.
+
+Kısa yol: `start.ps1` aynı adımları yapar (anahtarları gizli okur, 8010 portunda başlatır,
+tarayıcıyı açar).
+
+```powershell
+.\start.ps1              # canlı ortam: https://tr.magicpay.ai, canlı anahtar
+.\start.ps1 -Ortam test  # test ortamı: https://trdev.magicpay.ai, test anahtarı
+```
+
+Canlı ortamda gerçek karttan gerçek tutar çekilir: kart alanları boş gelir, varsayılan tutar
+1,00 TL'dir (`DEMO_AMOUNT` ile değişir). Ödemeyi aynı gün **Siparişler** sayfasından iade edin.
 
 - Uygulamayı **asla** `--host 0.0.0.0` ile ya da bir tünelle (ngrok, Cloudflare Tunnel vb.)
   dışarı açmayın: sayfalar API anahtarınızla MagicPay'e çağrı yapar. `DEMO_PUBLIC_URL`

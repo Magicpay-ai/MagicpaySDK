@@ -20,6 +20,8 @@ classifiers = [
 [project.urls]
 Homepage = "https://magicpay.ai"
 Documentation = "https://magicpay.gitbook.io/magicpay-documentation"
+Source = "https://github.com/Magicpay-ai/MagicpaySDK"
+Issues = "https://github.com/Magicpay-ai/MagicpaySDK/issues"
 
 [tool.setuptools.packages.find]
 include = ["magicpay*"]

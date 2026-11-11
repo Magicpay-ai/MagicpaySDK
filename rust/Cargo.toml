@@ -7,6 +7,8 @@ description = "Official Rust SDK for the MagicPay payment API"
 license = "MIT"
 homepage = "https://magicpay.ai"
 documentation = "https://magicpay.gitbook.io/magicpay-documentation"
+repository = "https://github.com/Magicpay-ai/MagicpaySDK"
+readme = "README.md"
 keywords = ["magicpay", "payment", "payments", "3ds", "wallet"]
 categories = ["api-bindings", "finance"]
 

@@ -1,9 +1,9 @@
 <?php
 
-// Dependency-free test runner: `php tests/run.php` (or `composer test`)
+// Dependency-free test runner, from the repository root: `php php/tests/run.php` (or `composer test`)
 declare(strict_types=1);
 
-require __DIR__ . '/../vendor/autoload.php';
+require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 use MagicPay\Exception\ApiException;
 use MagicPay\Http\HttpClientInterface;

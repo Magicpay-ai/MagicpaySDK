@@ -79,4 +79,4 @@ expects `{}`. Credentials are marked `#[\SensitiveParameter]` (hidden from stack
 Generic signed call: `$mp->request('GET', '/path', null, ['page' => 1])`. Signing helpers:
 `MagicPayClient::computeSignatureV2(...)`, `MagicPayClient::computeSignature(...)` (V1).
 
-All methods: [../ENDPOINTS.md](../ENDPOINTS.md). Tests: `composer dump-autoload && php tests/run.php`.
+All methods: [../ENDPOINTS.md](../ENDPOINTS.md). Tests (from the repository root, where `composer.json` lives): `composer dump-autoload && php php/tests/run.php`.
